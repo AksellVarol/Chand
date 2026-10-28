@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>چند — قیمت لحظه‌ای</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0d10;--card:#17191d;--card2:#1f2227;--line:#262a31;--txt:#f5f6f8;--mut:#9aa3ad;--green:#22c55e;--red:#f43f5e;--blue:#2f7bff;--amber:#f59e0b}
+body.light{--bg:#f3f4f6;--card:#fff;--card2:#eef0f3;--line:#e2e6eb;--txt:#111318;--mut:#66707a}
+body{font-family:Tahoma,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);padding:16px 14px 96px;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:52px;height:52px;border-radius:16px;background:#e8e8eb;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);flex:none}
+.logo svg{width:34px;height:34px}
+h1{font-size:27px;line-height:1.2}
+.sub{font-size:12.5px;color:var(--mut);margin-top:3px}
+.iconbtn{width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--line);color:var(--txt);font-size:20px;cursor:pointer;flex:none}
+.topbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.pill{background:var(--card);border:1px solid var(--line);color:var(--txt);padding:9px 14px;border-radius:999px;font-family:inherit;font-size:13.5px;cursor:pointer}
+.pill.active{background:var(--blue);border-color:var(--blue);color:#fff}
+#status{font-size:12.5px;color:var(--mut);margin-bottom:14px;line-height:1.9}
+#status b{color:var(--txt)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:22px;padding:14px 13px;cursor:pointer;position:relative;min-height:158px;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.card:active{transform:scale(.98)}
+.flag{width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none}
+.name{font-size:14.5px;font-weight:bold;line-height:1.4}
+.code{font-size:11px;color:var(--mut);letter-spacing:.5px}
+.chip{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;margin-top:14px;font-weight:bold}
+.chip.up{color:var(--green);background:rgba(34,197,94,.13)}
+.chip.down{color:var(--red);background:rgba(244,63,94,.13)}
+.chip.flat{color:var(--mut);background:rgba(154,163,173,.13)}
+.price{font-size:21px;font-weight:bold;margin-top:6px;direction:ltr;text-align:right}
+.unit{font-size:12px;color:var(--mut);font-weight:normal}
+.time{font-size:11px;color:var(--mut);margin-top:9px}
+.stale{color:var(--amber);font-size:11px;font-weight:bold}
+.remove{position:absolute;left:10px;bottom:10px;background:none;border:0;color:var(--mut);font-size:15px;cursor:pointer}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:50}
+.drawer.open{display:block}
+.panel{position:absolute;left:0;top:0;bottom:0;width:86%;max-width:340px;background:#17191d;color:#fff;padding:20px;overflow:auto}
+.panel button{display:flex;justify-content:space-between;width:100%;background:#24272d;color:#fff;border:1px solid #2d323a;padding:14px;border-radius:16px;margin-bottom:10px;font-family:inherit;cursor:pointer}
+.page{display:none}
+.page.open{display:block}
+input{width:100%;padding:13px;border-radius:16px;border:1px solid #333;background:#222;color:#fff;font-family:inherit;margin-bottom:12px}
+.listitem{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);padding:13px;border-radius:16px;margin-bottom:9px}
+.listitem button{padding:8px 15px;border-radius:999px;border:0;background:var(--blue);color:#fff;font-family:inherit;cursor:pointer;flex:none}
+.listitem button.off{background:#444}
+.bottom{position:fixed;bottom:0;right:0;left:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:13px 20px;z-index:40}
+.bottom button{background:none;border:0;color:var(--txt);font-size:23px;cursor:pointer}
+.widget{border:1px solid #333;border-radius:22px;padding:8px 12px;background:#131518;color:#fff}
+.widget .wrow{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid #222}
+.widget .wrow:last-child{border:0}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}
+.modal.open{display:flex}
+.modal .box{background:#1e2025;color:#fff;border-radius:24px;padding:22px;width:100%;max-width:380px;line-height:2.1;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.closebtn{width:100%;padding:12px;border-radius:16px;border:0;background:var(--blue);color:#fff;font-family:inherit;margin-top:12px;cursor:pointer;font-size:15px}
+.note{font-size:12px;color:var(--mut);line-height:2;margin-top:12px}
+h2{margin-bottom:6px} h3{margin:16px 0 10px}
+</style>
+</head>
+<body>
+<div id="mainPage">
+<header>
+<div class="brand">
+<div class="logo"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M12 78 C22 30 38 30 50 72 C62 30 78 30 88 78" fill="none" stroke="#1a6cff" stroke-width="13" stroke-linecap="round"/></svg></div>
+<div><h1>چند</h1><div class="sub">قیمت لحظه‌ای ارز، طلا، سکه و رمزارز</div></div>
+</div>
+<button class="iconbtn" onclick="openDrawer()">⋯</button>
+</header>
+<div class="topbar">
+<button class="iconbtn" onclick="refreshAll(true)" title="به‌روزرسانی">↻</button>
+<button class="pill active" onclick="setCat('all',this)">همه</button>
+<button class="pill" onclick="setCat('currency',this)">ارزها</button>
+<button class="pill" onclick="setCat('gold',this)">طلا و سکه</button>
+<button class="pill" onclick="setCat('crypto',this)">رمزارز</button>
+<button class="pill" onclick="setCat('oil',this)">نفت و کالا</button>
+</div>
+<div id="status">در حال دریافت قیمت‌های زنده از TGJU…</div>
+<div class="grid" id="grid"></div>
+<p class="note">منبع: فید زنده TGJU (call1.tgju.org) + قیمت جهانی رمزارزها. قیمت‌های تومانی = قیمت ریالی ÷ ۱۰. هر کارت ساعت همان قیمت را نشان می‌دهد و قیمت قدیمی با هشدار مشخص می‌شود. این برنامه توصیه مالی نیست.</p>
+</div>
+
+<div id="addPage" class="page">
+<h2>➕ افزودن قیمت</h2><p class="note" style="margin-bottom:12px">هر ارز و کالایی از فید TGJU را به صفحه اصلی اضافه کن؛ از جمله ارز همه کشورها، تتر و طلای آبشده.</p>
+<input id="searchInput" placeholder="جستجو: دلار، یورو، درهم، عراق، طلا…" oninput="renderCatalog()">
+<div id="catalog"></div>
+<button class="closebtn" onclick="showPage('main')">بازگشت</button>
+</div>
+
+<div id="widgetPage" class="page">
+<h2>ویجت من</h2>
+<p class="note">مثل همان ویجتی که در عکس دیده بودی: تا ۵ ردیف، با فلش ↻ برای تازه‌سازی. انتخاب‌هایت از همین‌جا به ویجت واقعی صفحه اصلی می‌رسد.</p>
+<div style="display:flex;gap:10px;margin:14px 0;align-items:center"><button class="iconbtn" onclick="refreshAll(true)">↻</button><span id="widgetTime" style="color:var(--mut);font-size:13px"></span></div>
+<div class="widget" id="widgetPreview"></div>
+<h3>انتخاب آیتم‌های ویجت</h3>
+<div id="widgetPicker"></div>
+<button class="closebtn" onclick="showPage('main')">بازگشت</button>
+</div>
+
+<div class="bottom">
+<button onclick="showPage('add')">＋</button>
+<span id="bottomTime" style="color:var(--mut);font-size:14px"></span>
+<button onclick="openDrawer()">⋯</button>
+</div>
+
+<div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()">
+<div class="panel">
+<h3 style="margin-bottom:14px">تنظیمات</h3>
+<button onclick="toggleUnit()">حالت نمایش: <span id="unitLabel">تومان</span> <span>‹</span></button>
+<button onclick="toggleTheme()">تم: <span id="themeLabel">تیره</span> <span>‹</span></button>
+<button onclick="showPage('widget');closeDrawer()">ویجت <span>‹</span></button>
+<button onclick="refreshAll(true);closeDrawer()">به‌روزرسانی همه <span>‹</span></button>
+<button onclick="alert('چند — ساخته‌شده با کاتلین. منبع قیمت‌ها: فید زنده TGJU + قیمت جهانی رمزارزها. این برنامه فقط قیمت نشان می‌دهد و توصیه مالی نیست.')">درباره <span>‹</span></button>
+<button onclick="closeDrawer()">بستن</button>
+</div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="box" id="modalBox"></div></div>
+
+<script>
+const LS='chandV2';
+let state=JSON.parse(localStorage.getItem(LS)||'null')||{watch:['price_dollar_rl','price_eur','geram18','sekee','price_aed','usdt_calc','price_iqd','oil_brent'],widget:['price_dollar_rl','price_eur','geram18'],unit:'toman',theme:'dark'};
+try{if(window.AndroidBridge){const w=window.AndroidBridge.getWidget(); if(w) state.widget=w.split(',').filter(Boolean);}}catch(e){}
+function save(){localStorage.setItem(LS,JSON.stringify(state)); try{if(window.AndroidBridge) window.AndroidBridge.saveWidget(state.widget.join(','));}catch(e){}}
+const NAMES={price_dollar_rl:['دلار','🇺🇸','currency'],price_eur:['یورو','🇪🇺','currency'],price_aed:['درهم امارات','🇦🇪','currency'],price_gbp:['پوند انگلیس','🇬🇧','currency'],price_try:['لیر ترکیه','🇹🇷','currency'],price_iqd:['دینار عراق','🇮🇶','currency'],price_sar:['ریال عربستان','🇸🇦','currency'],price_qar:['ریال قطر','🇶🇦','currency'],price_cad:['دلار کانادا','🇨🇦','currency'],price_aud:['دلار استرالیا','🇦🇺','currency'],price_chf:['فرانک سوئیس','🇨🇭','currency'],price_cny:['یوان چین','🇨🇳','currency'],price_jpy:['ین ژاپن','🇯🇵','currency'],price_krw:['وون کره','🇰🇷','currency'],price_inr:['روپیه هند','🇮🇳','currency'],price_rub:['روبل روسیه','🇷🇺','currency'],price_kwd:['دینار کویت','🇰🇼','currency'],price_omr:['ریال عمان','🇴🇲','currency'],price_bhd:['دینار بحرین','🇧🇭','currency'],price_afn:['افغانی','🇦🇫','currency'],price_azn:['منات آذربایجان','🇦🇿','currency'],price_gel:['لاری گرجستان','🇬🇪','currency'],price_amd:['درام ارمنستان','🇦🇲','currency'],geram18:['طلای ۱۸ عیار','🪙','gold'],geram24:['طلای ۲۴ عیار','🪙','gold'],mesghal:['طلای آبشده','🫙','gold'],sekee:['سکه امامی','🪙','gold'],sekeb:['سکه بهار آزادی','🪙','gold'],nim:['نیم سکه','🪙','gold'],rob:['ربع سکه','🪙','gold'],gerami:['سکه گرمی','🪙','gold'],ons:['انس جهانی طلا','🌍','gold'],silver_999:['نقره ۹۹۹','🥈','gold'],oil_brent:['نفت برنت','🛢️','oil'],oil:['نفت (WTI)','🛢️','oil'],usdt_calc:['تتر (USDT)','₮','crypto'],btc_calc:['بیت‌کوین','₿','crypto'],eth_calc:['اتریوم','Ξ','crypto']};
+let feed=null, globalPrices={}, cat='all';
+const faNum=n=>Number(n).toLocaleString('fa-IR');
+function parseNum(s){return parseFloat(String(s).replace(/,/g,'').trim())||0}
+function fmt(v,unit){if(unit==='usd')return Number(v).toLocaleString('en-US',{maximumFractionDigits:2});return faNum(Math.round(v))}
+function itemData(key){
+ if(key.endsWith('_calc')){
+   const sym=key==='usdt_calc'?'tether':key==='btc_calc'?'bitcoin':'ethereum';
+   const usd=globalPrices[sym]; const dlr=feed&&feed.current&&feed.current.price_dollar_rl?parseNum(feed.current.price_dollar_rl.p):null;
+   if(!usd||!dlr)return null;
+   return {key,name:NAMES[key][0],icon:NAMES[key][1],cat:NAMES[key][2],price:usd*dlr/10,unit:'toman',dp:null,time:'محاسبه زنده',stale:false,high:null,low:null};
+ }
+ const e=feed&&feed.current?feed.current[key]:null; if(!e)return null;
+ const rial=parseNum(e.p);
+ const isRial=(key.startsWith('price_')||['geram18','geram24','mesghal','sekee','sekeb','nim','rob','gerami','silver_999'].indexOf(key)>=0);
+ const price=isRial?(state.unit==='toman'?rial/10:rial):rial;
+ const unit=isRial?(state.unit==='toman'?'toman':'rial'):'usd';
+ const ts=e.ts?new Date(e.ts.replace(' ','T')):null;
+ const stale=ts?(Date.now()-ts.getTime()>2*24*3600*1000):false;
+ return {key,name:NAMES[key]?NAMES[key][0]:key,icon:NAMES[key]?NAMES[key][1]:'💱',cat:NAMES[key]?NAMES[key][2]:'currency',price,unit,dp:e.dp,time:e.t_en||'',stale,high:e.h,low:e.l};
+}
+function allKeys(){const keys=new Set(Object.keys(NAMES)); if(feed)Object.keys(feed.current).filter(k=>k.startsWith('price_')).forEach(k=>keys.add(k)); return Array.from(keys);}
+function codeOf(key){return key.replace('price_','').toUpperCase()}
+function render(){
+ const grid=document.getElementById('grid'); grid.innerHTML='';
+ state.watch.forEach(key=>{
+   const d=itemData(key); if(!d)return; if(cat!=='all'&&d.cat!==cat)return;
+   const chg=d.dp==null?'<span class="chip flat">—</span>':`<span class="chip ${d.dp>=0?'up':'down'}">${d.dp>=0?'▲':'▼'} ${faNum(Math.abs(d.dp))}٪</span>`;
+   const el=document.createElement('div'); el.className='card';
+   el.innerHTML=`<div style="display:flex;gap:10px;align-items:center"><span class="flag">${d.icon}</span><div><div class="name">${d.name}</div><div class="code">${codeOf(key)}</div></div></div>${chg}<div class="price">${fmt(d.price,d.unit)} <span class="unit">${d.unit==='usd'?'$':d.unit==='toman'?'تومان':'ریال'}</span></div><div class="time">🕐 ${d.time}${d.stale?' <span class="stale">⚠ قیمت قدیمی</span>':''}</div><button class="remove" onclick="event.stopPropagation();removeItem('${key}')">✕</button>`;
+   el.onclick=function(){showDetail(d)}; grid.appendChild(el);
+ });
+ document.getElementById('unitLabel').textContent=state.unit==='toman'?'تومان':'ریال';
+ document.body.classList.toggle('light',state.theme==='light');
+ document.getElementById('themeLabel').textContent=state.theme==='light'?'روشن':'تیره';
+ renderWidget();
+}
+function showDetail(d){
+ document.getElementById('modalBox').innerHTML=`<h3>${d.icon} ${d.name}</h3><div>قیمت: <b>${fmt(d.price,d.unit)} ${d.unit==='usd'?'دلار':d.unit}</b></div>${d.dp!=null?`<div>تغییر امروز: ${faNum(d.dp)}٪</div>`:''}${d.high?`<div>بیشترین امروز: ${fmt(state.unit==='toman'?parseNum(d.high)/10:parseNum(d.high),'toman')} تومان</div><div>کمترین امروز: ${fmt(state.unit==='toman'?parseNum(d.low)/10:parseNum(d.low),'toman')} تومان</div>`:''}<div>ساعت قیمت: ${d.time}</div><div style="font-size:12px;color:#aaa">منبع: TGJU (فید زنده)${d.key.endsWith('_calc')?' × قیمت جهانی':''}</div><button class="closebtn" onclick="closeModal()">بستن</button>`;
+ document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function openDrawer(){document.getElementById('drawer').classList.add('open')}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open')}
+function showPage(p){document.getElementById('mainPage').style.display=p==='main'?'block':'none';document.getElementById('addPage').classList.toggle('open',p==='add');document.getElementById('widgetPage').classList.toggle('open',p==='widget');if(p==='add')renderCatalog();if(p==='widget')renderWidgetPicker();window.scrollTo(0,0)}
+function setCat(c,el){cat=c;document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));el.classList.add('active');render()}
+function toggleUnit(){state.unit=state.unit==='toman'?'rial':'toman';save();render()}
+function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';save();render()}
+function removeItem(k){state.watch=state.watch.filter(x=>x!==k);state.widget=state.widget.filter(x=>x!==k);save();render()}
+function renderCatalog(){
+ const q=(document.getElementById('searchInput').value||'').trim();
+ const box=document.getElementById('catalog'); box.innerHTML='';
+ allKeys().forEach(key=>{
+   const d=itemData(key); const nm=NAMES[key]?NAMES[key][0]:key;
+   if(q&&!(nm.indexOf(q)>=0||key.indexOf(q)>=0))return;
+   const has=state.watch.indexOf(key)>=0;
+   const row=document.createElement('div'); row.className='listitem';
+   row.innerHTML=`<span>${NAMES[key]?NAMES[key][1]:'💱'} ${nm} <small style="color:#888">${d?fmt(d.price,d.unit)+' '+(d.unit==='usd'?'$':'تومان'):''}</small></span><button class="${has?'off':''}" onclick="toggleWatch('${key}')">${has?'✓ اضافه شده':'افزودن'}</button>`;
+   box.appendChild(row);
+ });
+}
+function toggleWatch(k){if(state.watch.indexOf(k)>=0)removeItem(k);else{state.watch.push(k);save();render();renderCatalog()}}
+function renderWidget(){
+ const w=document.getElementById('widgetPreview'); if(!w)return; w.innerHTML='';
+ state.widget.forEach(key=>{const d=itemData(key); if(!d)return; const r=document.createElement('div'); r.className='wrow'; r.innerHTML=`<span>${d.icon} ${d.name}</span><b dir="ltr">${fmt(d.price,d.unit)} ${d.unit==='usd'?'$':'تومان'}</b>`; w.appendChild(r)});
+ document.getElementById('widgetTime').textContent='آخرین به‌روزرسانی: '+new Date().toLocaleTimeString('fa-IR');
+}
+function renderWidgetPicker(){
+ const box=document.getElementById('widgetPicker'); box.innerHTML='';
+ state.watch.forEach(key=>{const d=itemData(key); if(!d)return; const has=state.widget.indexOf(key)>=0; const row=document.createElement('div'); row.className='listitem'; row.innerHTML=`<span>${d.icon} ${d.name}</span><button class="${has?'':'off'}" onclick="toggleWidget('${key}')">${has?'✓ در ویجت':'افزودن به ویجت'}</button>`; box.appendChild(row)});
+}
+function toggleWidget(k){if(state.widget.indexOf(k)>=0)state.widget=state.widget.filter(x=>x!==k);else{if(state.widget.length>=5){alert('ویجت حداکثر ۵ ردیف دارد');return}state.widget.push(k)}save();render();renderWidgetPicker()}
+async function fetchTGJU(){
+ const url='https://call1.tgju.org/ajax.json?'+Date.now();
+ const tries=[url,'https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(url)];
+ for(const u of tries){try{const r=await fetch(u); if(!r.ok)continue; const j=await r.json(); if(j&&j.current)return j}catch(e){}}
+ throw new Error('TGJU');
+}
+async function refreshAll(manual){
+ const st=document.getElementById('status'); st.innerHTML='⏳ در حال به‌روزرسانی…';
+ try{
+   const results=await Promise.allSettled([fetchTGJU(),fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin,ethereum&vs_currencies=usd').then(r=>r.json())]);
+   if(results[0].status==='fulfilled')feed=results[0].value;
+   if(results[1].status==='fulfilled')globalPrices=results[1].value;
+   if(!feed)throw new Error('no feed');
+   const now=new Date();
+   document.getElementById('bottomTime').textContent=now.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+   st.innerHTML=`✅ به‌روز شد — <b>${now.toLocaleTimeString('fa-IR')}</b> — منبع: TGJU (فید زنده)${results[1].status==='fulfilled'?' + قیمت جهانی رمزارز':''}`;
+   render();
+ }catch(e){
+   st.innerHTML='❌ دریافت قیمت ناموفق بود. اینترنت را بررسی کن و دکمه ↻ را دوباره بزن.';
+   if(feed)render();
+ }
+}
+refreshAll(false);
+setInterval(function(){refreshAll(false)},60000);
+</script>
+</body>
+</html>
